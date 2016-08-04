@@ -1,3 +1,5 @@
 class Friend
-  # TODO: your code goes here!
+  def greeting(name = '')
+    "Hello#{name.empty? ? '' : ', ' + name}!"
+  end
 end

@@ -4,6 +4,7 @@
 # factors of a given number.
 
 def factors(num)
+  (1..num ).select {|i| num % i === 0 }
 end
 
 # ### Bubble Sort
@@ -46,10 +47,27 @@ end
 # http://stackoverflow.com/questions/827649/what-is-the-ruby-spaceship-operator
 
 class Array
-  def bubble_sort!
+  def bubble_sort!( &prc )
+
+    prc ||= Proc.new {|a, b| a <=> b}
+
+    modified = false
+
+    self.each_with_index do |item, index|
+
+      if index > 0 && prc.call( self[index - 1], self[index] ) == 1
+        self[index], self[index - 1] = self[index - 1], self[index]
+        modified = true
+      end
+    end
+
+    return bubble_sort!( &prc ) if modified
+
+    self
   end
 
   def bubble_sort(&prc)
+    self.dup.bubble_sort!( &prc )
   end
 end
 
@@ -67,9 +85,25 @@ end
 # words).
 
 def substrings(string)
+  strings = []
+
+  string.split('').each_with_index do |letter1, index1|
+    new_string = letter1
+
+    strings << new_string if !strings.include?( new_string )
+
+    ((index1 + 1)..(string.length - 1)).each do |index2|
+      new_string += string[ index2 ]
+
+      strings << new_string if !strings.include?( new_string )
+    end
+  end
+
+  strings
 end
 
 def subwords(word, dictionary)
+  substrings(word).select {|substring| dictionary.include?( substring )}
 end
 
 # ### Doubler
@@ -77,6 +111,7 @@ end
 # array with the original elements multiplied by two.
 
 def doubler(array)
+  array.map {|item| item * 2 }
 end
 
 # ### My Each
@@ -104,6 +139,14 @@ end
 
 class Array
   def my_each(&prc)
+    i = 0
+
+    while i < self.length
+      prc.call self[ i ]
+      i += 1
+    end
+
+    self
   end
 end
 
@@ -122,12 +165,33 @@ end
 
 class Array
   def my_map(&prc)
+    new_array = []
+
+    self.my_each do |item|
+      new_array << prc.call( item )
+    end
+
+    new_array
   end
 
   def my_select(&prc)
+    new_array = []
+
+    self.my_each do |item|
+      new_array << item if prc.call( item )
+    end
+
+    new_array
   end
 
   def my_inject(&blk)
+    result = self.first
+
+    self.drop(1).my_each do |item|
+      result = blk.call( result, item )
+    end
+
+    result
   end
 end
 
@@ -141,4 +205,5 @@ end
 # ```
 
 def concatenate(strings)
+  strings.inject(:+)
 end

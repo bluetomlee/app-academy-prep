@@ -5,6 +5,7 @@
 
 class Array
   def sum
+    self.inject(:+) || 0
   end
 end
 
@@ -16,9 +17,15 @@ end
 
 class Array
   def square!
+    each_index do |index|
+      self[ index ] *= self[ index ]
+    end
+
+    self
   end
 
   def square
+    self.dup.square!
   end
 end
 
@@ -36,6 +43,11 @@ end
 
 class Array
   def my_uniq
+    new_array = []
+
+    self.each {|element| new_array << element if !new_array.include?( element )}
+
+    new_array
   end
 end
 
@@ -57,6 +69,15 @@ end
 
 class Array
   def two_sum
+    final_array = []
+
+    each_index do |index|
+      (index..(self.length - 1)).each do |index2|
+        final_array << [index, index2] if index != index2 && self[ index ] + self[ index2 ] == 0
+      end
+    end
+
+    final_array
   end
 end
 
@@ -69,6 +90,13 @@ end
 
 class Array
   def median
+    half_length = self.length / 2
+
+    temp_array = self.sort
+
+    return nil if temp_array.empty?
+    return temp_array[ ( half_length ).to_i ] if temp_array.length.odd?
+    ( temp_array[ half_length - 1 ] + temp_array[ half_length ] ) / 2.0
   end
 end
 
@@ -121,6 +149,17 @@ end
 
 class Array
   def my_transpose
+    width = self.first.length
+
+    final_array = Array.new( width ) { Array.new( width ) }
+
+    width.times do |x|
+      width.times do |y|
+        final_array[ x ][ y ] = self[ y ][ x ]
+      end
+    end
+
+    final_array
   end
 end
 

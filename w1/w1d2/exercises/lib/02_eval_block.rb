@@ -45,3 +45,8 @@
 # eval_block(1, 2, 3)
 # # => "NO BLOCK GIVEN"
 # ```
+
+def eval_block( *args, &prc )
+  raise "NO BLOCK GIVEN!" if !block_given?
+  prc.call *args
+end

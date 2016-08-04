@@ -29,6 +29,55 @@
 # all the items of `set1` that aren't in `set2`.
 
 class MyHashSet
+  attr_accessor :elements
+
+  def initialize
+    @elements = {}
+  end
+
+  def insert( element )
+    @elements = @elements.merge( element.is_a?(Hash) ? element : {element => nil} )
+  end
+
+  def include?( element )
+    @elements.keys.include?( element )
+  end
+
+  def delete( element )
+    @elements.delete( element )
+  end
+
+  def to_a
+    @elements.keys
+  end
+
+  def union( set )
+    new_set = self.class.new
+    new_set.elements = @elements.merge( set.elements )
+    new_set
+  end
+
+  def intersect( set )
+    new_set = self.class.new
+    new_set.elements = @elements.select{|key| set.include?( key )}
+    new_set
+  end
+
+  def minus( set )
+    new_set = self.class.new
+    new_set.elements = @elements.select{|key| true unless set.include?( key )} #did `true unless` just because it looks prettier than `!set.include?( key )`
+    new_set
+  end
+
+  def symmetric_difference( set )
+    new_set = self.class.new
+
+    new_set.elements = @elements.select{|key| true unless set.include?( key )}
+
+    new_set.elements = new_set.elements.merge( set.elements.select{|key| true unless @elements.include?( key )} )
+
+    new_set
+  end
 end
 
 # Bonus

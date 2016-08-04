@@ -17,7 +17,15 @@
 #   `"z"`! Ex.: `caesar("zany", 2) # => "bcpa"`
 
 class String
+  def shifted( shift )
+    start = "a".ord if self.downcase == self
+    start = "A".ord if self.upcase == self
+
+    ( ( self.ord - start + shift ) % 26 + start ).chr
+  end
+
   def caesar(shift)
+    self.split('').inject('') {|final_string, letter| final_string + letter.shifted( shift )}
   end
 end
 
@@ -36,6 +44,17 @@ end
 
 class Hash
   def difference(other_hash)
+    final_hash = {}
+
+    self.each do |key,value|
+      final_hash[ key ] = value if !other_hash.key?( key )
+    end
+
+    other_hash.each do |key,value|
+      final_hash[ key ] = value if !self.key?( key )
+    end
+
+    final_hash
   end
 end
 
@@ -98,6 +117,15 @@ end
 
 class Fixnum
   def stringify(base)
+    return 0 if self == 0
+
+    digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ]
+
+    small_digit = self % base
+
+    remaining = self - small_digit
+
+    return ( remaining > 0 ? ( remaining / base ).stringify( base ) : '' ) + digits[ small_digit ]
   end
 end
 
