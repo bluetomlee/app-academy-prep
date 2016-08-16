@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Book
   attr_reader :title
 
@@ -9,6 +11,7 @@ class Book
     'by',
     'for',
     'in',
+    'is',
     'of',
     'on',
     'to',
@@ -36,11 +39,11 @@ class Book
   end
 
   private
-  def should_be_capitalized?( title, word )
+  def should_be_capitalized?(title, word)
     !is_little_word?( word ) || title.empty?
   end
 
-  def is_little_word?( word )
+  def is_little_word?(word)
     LITTLE_WORDS.include?( word )
   end
 end
