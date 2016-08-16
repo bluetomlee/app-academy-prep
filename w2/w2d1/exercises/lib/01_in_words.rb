@@ -29,7 +29,7 @@ class Integer
       current_value = num % ( divisor * 1000 )
       num -= current_value
 
-      number_words.unshift( ( current_value / divisor ).in_words + ' ' + WORDS['large_nums'][ divisor ] ) if current_value > 0
+      number_words.unshift( ( current_value / divisor ).in_words + ' ' + WORDS['large_nums'][ divisor.to_f ] ) if current_value > 0
 
       divisor *= 1000
     end
@@ -54,10 +54,20 @@ class Integer
         twenty thirty forty fifty sixty seventy eighty ninety
       ),
     "large_nums" => {
-      1000 => 'thousand',
-      1000000 => 'million',
-      1000000000 => 'billion',
-      1000000000000 => 'trillion'
+      1e3 => 'thousand',
+      1e6 => 'million',
+      1e9 => 'billion',
+      1e12 => 'trillion',
+      1e15 => 'quadrillion',
+      1e18 => 'quintillion',
+      1e21 => 'sextillion',
+      1e24 => 'septillion',
+      1e27 => 'octillion',
+      1e30 => 'nonillion',
+      1e33 => 'decillion',
+      1e36 => 'undecillion',
+      1e39 => 'duodecillion',
+      1e42 => 'tredecillion',
     }
   }
 end
