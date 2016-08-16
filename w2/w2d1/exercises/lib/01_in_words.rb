@@ -22,28 +22,15 @@ class Fixnum
       number_words.unshift( less_than_twenty( hundreds_value / 100 ) + ' hundred' ) if hundreds_value > 0
     end
 
-    if( num > 0 )
-      thousands_value = num % 1000000
-      num -= thousands_value
-      number_words.unshift( ( thousands_value / 1000 ).in_words + ' thousand' ) if thousands_value > 0
-    end
+    divisor = 1000
 
-    if( num > 0 )
-      millions_value = num % 1000000000
-      num -= millions_value
-      number_words.unshift( ( millions_value / 1000000 ).in_words + ' million' ) if millions_value > 0
-    end
+    until num == 0
+      current_value = num % ( divisor * 1000 )
+      num -= current_value
 
-    if( num > 0 )
-      billions_value = num % 1000000000000
-      num -= billions_value
-      number_words.unshift( ( billions_value / 1000000000 ).in_words + ' billion' ) if billions_value > 0
-    end
+      number_words.unshift( ( current_value / divisor ).in_words + ' ' + WORDS['large_nums'][ divisor ] ) if current_value > 0
 
-    if( num > 0 )
-      trillions_value = num % 1000000000000000
-      num -= trillions_value
-      number_words.unshift( ( trillions_value / 1000000000000 ).in_words + ' trillion' ) if trillions_value > 0
+      divisor *= 1000
     end
 
     number_words.join(' ')
@@ -63,8 +50,14 @@ class Fixnum
       thirteen fourteen fifteen sixteen seventeen eighteen nineteen
       ),
     "tens" => %w(
-      twenty thirty forty fifty sixty seventy eighty ninety
-    )
+        twenty thirty forty fifty sixty seventy eighty ninety
+      ),
+    "large_nums" => {
+      1000 => 'thousand',
+      1000000 => 'million',
+      1000000000 => 'billion',
+      1000000000000 => 'trillion'
+    }
   }
 end
 
@@ -92,28 +85,15 @@ class Bignum
       number_words.unshift( less_than_twenty( hundreds_value / 100 ) + ' hundred' ) if hundreds_value > 0
     end
 
-    if( num > 0 )
-      thousands_value = num % 1000000
-      num -= thousands_value
-      number_words.unshift( ( thousands_value / 1000 ).in_words + ' thousand' ) if thousands_value > 0
-    end
+    divisor = 1000
 
-    if( num > 0 )
-      millions_value = num % 1000000000
-      num -= millions_value
-      number_words.unshift( ( millions_value / 1000000 ).in_words + ' million' ) if millions_value > 0
-    end
+    until num == 0
+      current_value = num % ( divisor * 1000 )
+      num -= current_value
 
-    if( num > 0 )
-      billions_value = num % 1000000000000
-      num -= billions_value
-      number_words.unshift( ( billions_value / 1000000000 ).in_words + ' billion' ) if billions_value > 0
-    end
+      number_words.unshift( ( current_value / divisor ).in_words + ' ' + WORDS['large_nums'][ divisor ] ) if current_value > 0
 
-    if( num > 0 )
-      trillions_value = num % 1000000000000000
-      num -= trillions_value
-      number_words.unshift( ( trillions_value / 1000000000000 ).in_words + ' trillion' ) if trillions_value > 0
+      divisor *= 1000
     end
 
     number_words.join(' ')
@@ -133,7 +113,13 @@ class Bignum
       thirteen fourteen fifteen sixteen seventeen eighteen nineteen
       ),
     "tens" => %w(
-      twenty thirty forty fifty sixty seventy eighty ninety
-    )
+        twenty thirty forty fifty sixty seventy eighty ninety
+      ),
+    "large_nums" => {
+      1000 => 'thousand',
+      1000000 => 'million',
+      1000000000 => 'billion',
+      1000000000000 => 'trillion'
+    }
   }
 end
