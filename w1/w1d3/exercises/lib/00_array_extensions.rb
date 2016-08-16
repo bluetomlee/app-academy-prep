@@ -45,7 +45,9 @@ class Array
   def my_uniq
     new_array = []
 
-    self.each {|element| new_array << element if !new_array.include?( element )}
+    self.each do |element|
+      new_array << element if !new_array.include?( element )
+    end
 
     new_array
   end

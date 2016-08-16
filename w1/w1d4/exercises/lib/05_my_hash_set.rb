@@ -36,7 +36,8 @@ class MyHashSet
   end
 
   def insert( element )
-    @elements = @elements.merge( element.is_a?(Hash) ? element : {element => nil} )
+    new_element = element.is_a?(Hash) ? element : {element => nil}
+    @elements = @elements.merge( new_element )
   end
 
   def include?( element )
@@ -65,18 +66,32 @@ class MyHashSet
 
   def minus( set )
     new_set = self.class.new
-    new_set.elements = @elements.select{|key| true unless set.include?( key )} #did `true unless` just because it looks prettier than `!set.include?( key )`
+
+    new_set.elements = @elements.select do |key|
+      true unless set.include?( key ) #did `true unless` just because it looks prettier than `!set.include?( key )`
+    end
+
     new_set
   end
 
   def symmetric_difference( set )
     new_set = self.class.new
 
-    new_set.elements = @elements.select{|key| true unless set.include?( key )}
+    new_set.elements = @elements.select do |key|
+      true unless set.include?( key )
+    end
 
-    new_set.elements = new_set.elements.merge( set.elements.select{|key| true unless @elements.include?( key )} )
+    unique_elements = set.elements.select do |key|
+      true unless @elements.include?( key )
+    end
+
+    new_set.elements = new_set.elements.merge( unique_elements )
 
     new_set
+  end
+
+  def ==(object)
+
   end
 end
 

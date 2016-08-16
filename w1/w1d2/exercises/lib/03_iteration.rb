@@ -103,7 +103,9 @@ def substrings(string)
 end
 
 def subwords(word, dictionary)
-  substrings(word).select {|substring| dictionary.include?( substring )}
+  substrings(word).select do |substring| 
+    dictionary.include?( substring )
+  end
 end
 
 # ### Doubler

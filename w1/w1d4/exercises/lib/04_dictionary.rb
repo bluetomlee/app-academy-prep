@@ -22,6 +22,9 @@ class Dictionary
   end
 
   def printable
-    keywords.inject(''){ |final, keyword| final + (final.empty? ? '' : "\n") + "[#{keyword}] \"#{@entries[ keyword ]}\""}
+    keywords.inject('') do |final, keyword|
+      final += "\n" unless final.empty?
+      final + "[#{keyword}] \"#{@entries[ keyword ]}\""
+    end
   end
 end

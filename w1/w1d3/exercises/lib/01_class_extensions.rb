@@ -25,7 +25,9 @@ class String
   end
 
   def caesar(shift)
-    self.split('').inject('') {|final_string, letter| final_string + letter.shifted( shift )}
+    self.split('').inject('') do |final_string, letter|
+      final_string + letter.shifted( shift )
+    end
   end
 end
 
@@ -119,13 +121,16 @@ class Fixnum
   def stringify(base)
     return 0 if self == 0
 
-    digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' ]
+    digits = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
+               'b', 'c', 'd', 'e', 'f' ]
 
     small_digit = self % base
 
     remaining = self - small_digit
 
-    return ( remaining > 0 ? ( remaining / base ).stringify( base ) : '' ) + digits[ small_digit ]
+    next_digit = ( remaining > 0 ? ( remaining / base ).stringify( base ) : '' )
+
+    return next_digit + digits[ small_digit ]
   end
 end
 

@@ -29,7 +29,9 @@ class String
     punctuation = self.grab_punctuation
     started_capitalized = self.is_capitalized?
 
-    parts = self.split(/\b([^a,e,i,o,u]{0,}qu|[^a,e,i,o,u]+)?([a,e,i,o,u][a-z]{0,})?/i) #https://regex101.com/r/yP8yF9/3 <-- this is where I worked out the regex
+    regex = /\b([^a,e,i,o,u]{0,}qu|[^a,e,i,o,u]+)?([a,e,i,o,u][a-z]{0,})?/i
+
+    parts = self.split( regex ) #https://regex101.com/r/yP8yF9/3 <-- this is where I worked out the regex
     parts.shift if parts.first.empty? #getting rid of that first empty element that results from the regex matching the entire word, adding the conditional just in case there are outliers where the first word is not blank that I haven't thought of
     parts << parts.shift #moving the first element to be the last element
 
