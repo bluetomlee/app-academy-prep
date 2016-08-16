@@ -1,6 +1,4 @@
 class RPNCalculator
-  attr_accessor :value, :numbers
-
   def initialize
     @numbers = []
   end
@@ -10,23 +8,27 @@ class RPNCalculator
   end
 
   def plus
-    do_initial_stuff
-    @value += next_number
+    raise_exception_if_no_values
+    @numbers << next_number + next_number
   end
 
   def minus
-    do_initial_stuff
-    @value -= next_number
+    raise_exception_if_no_values
+    @numbers << -next_number + next_number
   end
 
   def divide
-    do_initial_stuff
-    @value /= next_number.to_f
+    raise_exception_if_no_values
+    @numbers << 1.0 / next_number * next_number
   end
 
   def times
-    do_initial_stuff
-    @value *= next_number
+    raise_exception_if_no_values
+    @numbers << next_number * next_number
+  end
+
+  def value
+    @numbers.last
   end
 
   def *
@@ -50,39 +52,18 @@ class RPNCalculator
   end
 
   def evaluate(str)
-    @value = nil
     @numbers = []
     tokens(str).each do |item|
       push( item ) if item.is_a?(Integer)
       public_send( item ) unless item.is_a?(Integer)
-      p @numbers
     end
 
-    @value
+    value
   end
 
   private
-  def do_initial_stuff
-    set_value_if_not_set
-    raise_exception_if_no_values
-  end
-
   def next_number
     @numbers.pop
-  end
-
-  def pop_second_from_last
-    second_from_last = @numbers[ second_from_last_index ]
-    @numbers.delete_at second_from_last_index
-    second_from_last
-  end
-
-  def second_from_last_index
-    @numbers.length - 2
-  end
-
-  def set_value_if_not_set
-      @value = pop_second_from_last unless @value
   end
 
   def raise_exception_if_no_values
