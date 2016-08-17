@@ -40,5 +40,97 @@
 # methods named above.
 
 class TowersOfHanoi
+  attr_accessor :towers
 
+  def initialize
+    @towers = [[3,2,1],[],[]]
+  end
+
+  def play
+    until won?
+      render
+      from = get_input("Where do you want to move from?")
+      to = get_input("Where do you want to move to?")
+
+      if valid_move?( from, to )
+        move( from, to )
+      else
+        puts "You can only move a disk onto an empty tower or onto a disk that is larger than it, please try again."
+      end
+    end
+
+    render
+    puts "You won!"
+  end
+
+  def render
+    puts "======================================="
+    puts "\t Towers \t"
+    puts "A\tB\tC"
+    (0..2).to_a.reverse.each do |num|
+      puts "#{disk_at(0, num)}\t#{disk_at(1, num)}\t#{disk_at(2, num)}"
+    end
+    puts "======================================="
+  end
+
+  def move( from, to )
+    @towers[to] << @towers[from].pop
+  end
+
+  def valid_move?( from, to )
+    return true if has_stuff?( from ) && piece_smaller_than?( from, to )
+    false
+  end
+
+  def won?
+    first_tower_empty? && only_one_tower_has_pieces?
+  end
+
+  private
+  TOWERS = {"A" => 0, "B" => 1, "C" => 2}
+
+  def tower_from_input( input )
+    TOWERS[ input ]
+  end
+
+  def has_stuff?( tower )
+    !@towers[ tower ].empty?
+  end
+
+  def piece( tower )
+    @towers[ tower ].last
+  end
+
+  def piece_smaller_than?( from, to )
+    !piece( to ) || piece( from ) < piece( to )
+  end
+
+  def first_tower_empty?
+    @towers.first.empty?
+  end
+
+  def only_one_tower_has_pieces?
+    @towers.one? { |tower| !tower.empty? }
+  end
+
+  def get_input( message )
+    while true
+      tower = tower_from_input( prompt( message ) )
+      return tower if tower
+      puts "That is not a valid tower...please try again."
+    end
+  end
+
+  def prompt( message )
+    puts message
+    gets.chomp.upcase
+  end
+
+  def disk_at( tower, level )
+    if @towers[ tower ][ level ]
+      @towers[ tower ][ level ]
+    else
+      " "
+    end
+  end
 end
