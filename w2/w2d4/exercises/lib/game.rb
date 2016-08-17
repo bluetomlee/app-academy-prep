@@ -1,6 +1,7 @@
 require_relative 'board'
 require_relative 'human_player'
 require_relative 'computer_player'
+require 'byebug'
 
 class Game
   attr_accessor :board, :players
@@ -20,15 +21,17 @@ class Game
   end
 
   def play
+    #debugger
     @board.reset
 
-    until @board.winner
+    until @board.winner || @board.none?
       play_turn
     end
 
     @board.print
 
-    puts "Congratulations #{winner.name}! You won!"
+    puts "Congratulations #{winner.name}! You won!" if @board.winner
+    puts "It was a draw!" if !@board.winner
   end
 
   def play_turn
