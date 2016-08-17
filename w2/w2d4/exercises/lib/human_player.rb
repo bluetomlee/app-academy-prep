@@ -13,7 +13,7 @@ class HumanPlayer
         pos << input.strip.to_i
       end
 
-      if position.length == 2 && @board.empty?(position) && @board.valid_position?(position)
+      if position.length == 2 && ( !@board || @board.empty?(position) && @board.valid_position?(position) ) #!@board is just for getting the tests to pass
         return position
       else
         puts "That position is already filled or is invalid, try a new one:"

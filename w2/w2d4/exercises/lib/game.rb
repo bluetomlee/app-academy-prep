@@ -21,7 +21,7 @@ class Game
 
   def play
     @board.reset
-    
+
     until @board.winner
       play_turn
     end
