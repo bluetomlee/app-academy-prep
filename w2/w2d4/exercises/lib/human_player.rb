@@ -11,7 +11,7 @@ class HumanPlayer
     while true
       position = gets.chomp.split(',').inject([]) do |pos, input|
         pos << input.strip.to_i
-      end
+      end.reverse #this is because the display is in reverse and I wanted it to be x, y
 
       if position.length == 2 && ( !@board || @board.empty?(position) && @board.valid_position?(position) ) #!@board is just for getting the tests to pass
         return position

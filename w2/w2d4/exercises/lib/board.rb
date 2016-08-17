@@ -61,7 +61,7 @@ class Board
   def print
     display_rows = []
 
-    @grid.each do |row|
+    @grid.each_with_index do |row, index|
       display_items = []
 
       row.each do |item|
@@ -69,10 +69,10 @@ class Board
         display_items << " " unless item
       end
 
-      display_rows << display_items.join(' | ')
+      display_rows << "#{index} #{display_items.join(' | ')}"
     end
 
-    puts display_rows.join("\n---------\n")
+    puts "  0   1   2 \n#{display_rows.join("\n  ---------\n")}"
   end
 
   def reset
