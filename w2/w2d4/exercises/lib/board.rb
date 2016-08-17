@@ -14,7 +14,11 @@ class Board
   end
 
   def place_mark(pos, mark)
-    self[*pos] = mark
+    self[*pos] = mark if empty?(pos)
+  end
+
+  def unmark(pos)
+    self[*pos] = nil
   end
 
   def empty?(pos)
@@ -38,6 +42,39 @@ class Board
     @grid.none? {|row| row.any?(&:nil?)}
   end
 
+  def empty_positions
+    positions = []
+
+    @grid.each_with_index do |row, index|
+      row.each_with_index do |spot, index2|
+        positions << [index, index2] if spot.nil?
+      end
+    end
+
+    positions
+  end
+
+  def print
+    display_rows = []
+
+    @grid.each do |row|
+      display_items = []
+
+      row.each do |item|
+        display_items << item if item
+        display_items << " " unless item
+      end
+
+      display_rows << display_items.join(' | ')
+    end
+
+    puts display_rows.join("\n---------\n")
+  end
+
+  def reset
+    @grid = Array.new(3) { Array.new(3) }
+  end
+
   private
   def column_winner
     @grid[0].each_with_index do |spot, index|
@@ -54,7 +91,7 @@ class Board
 
     nil
   end
-  
+
   def row_winner
     @grid.each do |row|
       return row[0] if row.all?{|spot| spot == row[0]}
