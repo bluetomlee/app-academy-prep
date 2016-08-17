@@ -6,7 +6,7 @@ class Board
   end
 
   def [](row, col)
-    @grid[row][col]
+    @grid[row][col] if @grid[row]
   end
 
   def []=(row, col, mark)
@@ -14,7 +14,7 @@ class Board
   end
 
   def place_mark(pos, mark)
-    self[*pos] = mark if empty?(pos)
+    self[*pos] = mark if empty?(pos) && valid_position?(pos)
   end
 
   def unmark(pos)
@@ -23,6 +23,10 @@ class Board
 
   def empty?(pos)
     self[*pos].nil?
+  end
+
+  def valid_position?(pos)
+    pos[0] < @grid.length && pos[1] < @grid[0].length
   end
 
   def winner
