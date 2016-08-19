@@ -1,5 +1,5 @@
 class Board
-  attr_accessor :grid, :ships
+  attr_accessor :grid, :ships, :currently_attacking
 
   def initialize(grid=nil, ships = default_ships)
     @grid = grid || Array.new(10) { Array.new(10) }
@@ -18,20 +18,24 @@ class Board
   def print_possible_positions(start_position, end_positions, attacker=true)
     place_mark(start_position.coordinates, 'N')
     end_positions.each do |position|
-      p position
       place_mark(position.coordinates, 'E')
     end
 
     puts "N marks the start point for the ship you are currently placing."
     puts "E marks the possible endpoints."
-    display(attacker)
+    display(attacker, false)
     unmark(start_position.coordinates)
     end_positions.each {|position| unmark(position.coordinates)}
   end
 
-  def display(attacker = true)
+  def display(attacker = true, show_stats = true)
     puts "#{column_headers}\n   #{grid_line}\n#{rows(attacker)}"
     puts "   #{grid_line}"
+
+    if show_stats
+      puts
+      stats
+    end
   end
 
   def attack(pos)
@@ -80,6 +84,25 @@ class Board
     (0..width).include?(pos[0]) && (0..height).include?(pos[1])
   end
 
+  def empty_positions
+    positions = []
+
+    @grid.each_with_index do |row, index|
+      row.each_with_index do |spot, index2|
+        positions << Position.new(index, index2) if spot.nil?
+      end
+    end
+
+    positions
+  end
+
+  def stats
+    puts "You have sunk #{ships_sunk} ships, and have #{ships_remaining} left to sink."
+    puts "You have hit #{hits} squares."
+    puts "You have fired at and missed #{misses} squares."
+    puts "And you have #{unknown_spots} left unknown."
+  end
+
   private
   def hit(pos)
     place_mark(pos, hit_marker)
@@ -90,12 +113,53 @@ class Board
 
     if @currently_attacking.sunk?
       puts "You sunk my #{@currently_attacking.name}!"
-      attacking_no_one
+      attacking_next
     end
   end
 
-  def attacking_no_one
-    @currently_attacking = nil
+  def unknown_spots
+    empty_positions.length
+  end
+
+  def misses
+    count_where('O')
+  end
+
+  def hits
+    count_where('X')
+  end
+
+  def ships_sunk
+    @ships.inject(0) do |total, ship|
+      total += 1 if ship.sunk?
+      total
+    end
+  end
+
+  def ships_remaining
+    @ships.inject(0) do |total, ship|
+      total += 1 unless ship.sunk?
+      total
+    end
+  end
+
+  def count_where(marker)
+    @grid.inject(0) do |total, row|
+      row.inject(total) do |row_total, spot|
+        row_total += 1 if spot == marker
+        row_total
+      end
+    end
+  end
+
+  def total_spots
+    unknown_spots + misses + hits
+  end
+
+  def attacking_next
+    @ships.select do |ship|
+      ship.hits.length > 0 && !ship.sunk?
+    end.first
   end
 
   def miss(pos)

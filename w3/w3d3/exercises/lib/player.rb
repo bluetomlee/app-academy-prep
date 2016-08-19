@@ -49,9 +49,9 @@ class HumanPlayer
       input = Helper.prompt("Enter the start position for where the ship will be placed.")
       pos = Position.parse( input )
 
-      unless pos.valid?(@board) && @board.empty?(pos.coordinates) && ship.available_end_positions(pos, @board).length > 0
+      unless pos && pos.valid?(@board) && @board.empty?(pos.coordinates) && ship.available_end_positions(pos, @board).length > 0
         puts "You entered an invalid position. Please try again."
-        puts "All end positions for that start position are blocked." if ship.available_end_positions(pos, @board).length == 0
+        puts "All end positions for that start position are blocked." if pos && ship.available_end_positions(pos, @board).length == 0
         pos = nil
       end
     end
