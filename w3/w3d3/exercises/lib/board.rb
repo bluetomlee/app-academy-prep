@@ -2,7 +2,7 @@ class Board
   attr_accessor :grid, :ships, :currently_attacking
 
   def initialize(grid=nil, ships = default_ships)
-    @grid = grid || Array.new(10) { Array.new(10) }
+    @grid = grid || Board.default_grid
     @ships = ships
     @currently_attacking = nil
   end
@@ -35,6 +35,13 @@ class Board
     if show_stats
       puts
       stats
+    end
+  end
+
+  def count
+    @ships.inject(0) do |total, ship|
+      total += 1 if ship.placed?
+      total
     end
   end
 
@@ -101,6 +108,10 @@ class Board
     puts "You have hit #{hits} squares."
     puts "You have fired at and missed #{misses} squares."
     puts "And you have #{unknown_spots} left unknown."
+  end
+
+  def self.default_grid
+    Array.new(10) { Array.new(10) }
   end
 
   private

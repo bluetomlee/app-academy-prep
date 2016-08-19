@@ -14,7 +14,7 @@ class ComputerPlayer
 
     puts
     puts "#{@name} placed all of their ships."
-    Helper.press_enter
+    #Helper.press_enter
     puts
   end
 

@@ -59,7 +59,7 @@ class BattleshipGame
     puts "An example grid coordinate is B5"
     puts "If you hit a ship you will be notified of what type of ship you hit and it's length."
     puts "At the start of each turn you'll see an updated board that shows where you have fired."
-    puts "An O indicates a spot you fired at and missed."
+    puts "A - indicates a spot you fired at and missed."
     puts "An X indicates a spot you fired at and hit."
     puts "When you have hit all the spots a ship is placed on you will be notified that you sunk the ship."
     puts "Good luck!"
