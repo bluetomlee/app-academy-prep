@@ -17,6 +17,7 @@ class HumanPlayer
 
     puts
     puts "You have placed all of your ships."
+    @board.display(false, false)
     Helper.press_enter
     puts
   end
@@ -45,7 +46,7 @@ class HumanPlayer
     pos = nil
 
     until pos && pos.valid?(@board) && ship.available_end_positions(pos, @board).length > 0
-      @board.display(false)
+      @board.display(false, false)
       input = Helper.prompt("Enter the start position for where the ship will be placed.")
       pos = Position.parse( input )
 

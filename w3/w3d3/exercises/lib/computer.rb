@@ -41,7 +41,7 @@ class ComputerPlayer
       return pos.surrounding_positions(board).sample
     else
       options = {}
-      
+
       if hits[0][0] == hits[1][0]
         options = {:x_only => true}
       else
@@ -62,12 +62,7 @@ class ComputerPlayer
     pos = nil
 
     until pos && pos.valid?(@board) && ship.available_end_positions(pos, @board).length > 0
-
       pos = Position.random_empty(@board)
-
-      unless pos.valid?(@board) && @board.empty?(pos.coordinates) && ship.available_end_positions(pos, @board).length > 0
-        pos = nil
-      end
     end
 
     pos

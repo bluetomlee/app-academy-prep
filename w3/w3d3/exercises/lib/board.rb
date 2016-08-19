@@ -89,7 +89,7 @@ class Board
 
     @grid.each_with_index do |row, index|
       row.each_with_index do |spot, index2|
-        positions << Position.new(index, index2) if spot.nil?
+        positions << Position.new(index, index2) if spot.nil? && !has_ship?([index, index2])
       end
     end
 
@@ -118,15 +118,15 @@ class Board
   end
 
   def unknown_spots
-    empty_positions.length
+    ( height * width ) - misses - hits
   end
 
   def misses
-    count_where('O')
+    count_where(miss_marker)
   end
 
   def hits
-    count_where('X')
+    count_where(hit_marker)
   end
 
   def ships_sunk
@@ -222,6 +222,6 @@ class Board
   end
 
   def miss_marker
-    "O"
+    "-"
   end
 end
