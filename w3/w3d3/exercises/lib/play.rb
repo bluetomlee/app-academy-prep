@@ -1,4 +1,4 @@
-require_relative 'game'
+require_relative 'battleship'
 
 def prompt( message )
   puts message
@@ -29,10 +29,8 @@ def set_up_player(num)
   end
 
   puts "Player #{num} is #{player.name}, good luck!"
-  puts
-  puts
   player
 end
 
-game = Game.new(set_up_player("one"), set_up_player("two"))
+game = BattleshipGame.new(set_up_player("one"), set_up_player("two"))
 game.play
