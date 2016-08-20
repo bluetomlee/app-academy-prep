@@ -2,6 +2,7 @@ require_relative 'abstract'
 require_relative 'computer'
 require_relative 'human'
 require_relative 'board'
+require 'byebug'
 
 class Hangman < Abstract
   attr_reader :guesser, :referee, :board
@@ -17,10 +18,15 @@ class Hangman < Abstract
   end
 
   def setup
-    @board = Board.new(@referee.pick_secret_word)
-    @guesser.board = @board
-    @referee.board = @board
-    true
+    word_length = @referee.pick_secret_word
+
+    @board = Board.new(word_length)
+    @guesser.set_board(@board)
+    @referee.set_board(@board)
+  end
+
+  def take_turn
+    @referee.check_guess(@guesser.guess)
   end
 
   private
@@ -33,7 +39,7 @@ class Hangman < Abstract
   def guess
     until game_over?
       show_board
-      @referee.check_guess(@guesser.guess)
+      take_turn
     end
 
     end_game

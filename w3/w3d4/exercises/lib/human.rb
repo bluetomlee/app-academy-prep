@@ -12,12 +12,17 @@ class HumanPlayer < Abstract
   end
 
   def pick_secret_word
+    
   end
 
   def check_guess
   end
 
   def handle_response
+  end
+
+  def set_board(board)
+    @board = board
   end
 
   def tell_word

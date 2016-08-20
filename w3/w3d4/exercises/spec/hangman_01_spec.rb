@@ -4,11 +4,11 @@ require "hangman"
 describe "Phase I" do
   describe "ComputerPlayer" do
     let(:dictionary) { ["foobar"] }
-    let(:computer_player) { ComputerPlayer.new(dictionary) }
+    let(:computer_player) { ComputerPlayer.new(dictionary: dictionary) }
 
     describe "#initialize" do
       it "accepts a dictionary as an argument" do
-        expect { ComputerPlayer.new(dictionary) }.not_to raise_error
+        expect { ComputerPlayer.new(dictionary: dictionary) }.not_to raise_error
       end
     end
 
@@ -26,7 +26,7 @@ describe "Phase I" do
       end
 
       it "returns the indices of the found letters" do
-        expect(computer_player.check_guess("o")).to eq([1,2]) 
+        expect(computer_player.check_guess("o")).to eq([1,2])
       end
 
       it "handles an incorrect guess" do
@@ -40,15 +40,19 @@ describe "Phase I" do
       {
         referee: double(
           "ComputerPlayer",
-          pick_secret_word: 2,
-          check_guess: [1]
+          dictionary: ["foobar"],
+          word: "stop",
+          pick_secret_word: 4,
+          check_guess: [1],
+          set_board: true
         ),
 
         guesser: double(
           "ComputerPlayer",
           register_secret_length: true,
           guess: "f",
-          handle_response: true
+          handle_response: true,
+          set_board: true
         )
       }
     end
@@ -82,34 +86,35 @@ describe "Phase I" do
 
       it "doesn't perform any setup" do
         expect(game.referee).not_to receive(:pick_secret_word)
-        expect(game.guesser).not_to receive(:register_secret_length)
         game
       end
     end
 
     describe "#setup" do
-      let(:length) { rand(5) }
+      let(:length) { rand(5) + 1 }
 
-      before(:each) do
-        allow(game.referee).to receive(:pick_secret_word).and_return(length)
-      end
+       before(:each) do
+         allow(game.referee).to receive(:pick_secret_word).and_return(length)
+         allow(game.referee).to receive(:set_board)
+       end
 
       it "tells the referee to choose a secret word" do
-        expect(game.referee).to receive(:pick_secret_word)
+         expect(game.referee).to receive(:pick_secret_word)
+         expect(game.referee).to receive(:set_board)
 
         game.setup
       end
 
-      it "tells the guesser the length of the secret word" do
-        expect(game.guesser).to receive(:register_secret_length).with(length)
-
+      it "tells the board the length of the secret word" do
         game.setup
+
+        expect(game.board.word_length).to be > 0
       end
 
       it "sets the board to be the same length as the secret length" do
         game.setup
 
-        expect(game.board.length).to eq(length)
+        expect(game.board.word_length).to eq(length)
       end
     end
 
@@ -131,11 +136,9 @@ describe "Phase I" do
       end
 
       it "updates the board" do
-        expect(game).to receive(:update_board)
-      end
-
-      it "has the guesser handle the referee's response" do
-        expect(game.guesser).to receive(:handle_response)
+        guess = ("a".."z").to_a.sample # chooses a random letter
+        allow(game.guesser).to receive(:guess).and_return(guess)
+        expect(game.referee).to receive(:check_guess)
       end
     end
   end

@@ -3,35 +3,27 @@ require "hangman"
 
 describe "Phase II" do
   describe "ComputerPlayer" do
-    let(:player) { ComputerPlayer.new(["foobar"]) }
-    let(:board)  { [nil, nil, nil, nil, nil, nil] }
+    let(:player) { ComputerPlayer.new(dictionary: ["foobar"]) }
+    let(:board)  { Board.new(6) }
 
-    describe "#register_secret_length" do
-      it "accepts a length as an argument" do
-        expect { player.register_secret_length(6) }.not_to raise_error
+    describe "#set_board" do
+      it "accepts a board as an argument" do
+        expect { player.set_board(board) }.not_to raise_error
       end
     end
 
     describe "#guess" do
-      before(:each) { player.register_secret_length(6) }
+      before(:each) { player.set_board(board) }
 
       it "accepts a board" do
-        expect { player.guess(board) }.not_to raise_error
+        expect { player.guess }.not_to raise_error
       end
 
       it "returns a letter" do
-        letter = player.guess(board)
+        letter = player.guess
 
         expect(letter).to be_instance_of(String)
         expect(letter.length).to eq(1)
-      end
-    end
-
-    describe "#handle_response" do
-      it "should not throw an error" do
-        player.register_secret_length(6)
-
-        expect { player.handle_response("z", []) }.not_to raise_error
       end
     end
   end

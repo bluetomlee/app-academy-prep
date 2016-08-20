@@ -2,6 +2,7 @@ class Board < Abstract
   attr_accessor :missed_letters, :word, :maximum_misses
 
   def initialize(word_length)
+    word_length ||= 0
     @missed_letters = []
     @word = Array.new(word_length)
     @maximum_misses = 6
@@ -12,6 +13,8 @@ class Board < Abstract
   end
 
   def fill_in_letter(letter, indexes=[])
+    letter = letter.upcase
+    
     if indexes.length > 0
       indexes.each {|index| @word[index] = letter}
     else
@@ -28,6 +31,10 @@ class Board < Abstract
     puts "               Here are the letters you have guessed that were wrong:"
     display_misses
     puts
+  end
+
+  def word_length
+    @word.length
   end
 
   def solved?
