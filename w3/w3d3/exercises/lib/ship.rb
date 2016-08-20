@@ -22,6 +22,11 @@ class Ship
     raise "The length of the ship does not match the positions it was placed in." unless correct_length?
   end
 
+  def randomly_place(board)
+    start = random_start_pos(board)
+    place(start, random_end_pos(start))
+  end
+
   def hit(pos)
     @hits << pos if hit?(pos)
   end
@@ -57,5 +62,19 @@ class Ship
     else
       y_range.count == @length
     end
+  end
+
+  def random_start_pos(board)
+    pos = nil
+
+    until pos && pos.valid? && available_end_positions(pos).length > 0
+      pos = Position.random_empty(board)
+    end
+
+    pos
+  end
+
+  def random_end_pos(start)
+    available_end_positions(start).sample
   end
 end

@@ -114,6 +114,12 @@ class Board
     Array.new(10) { Array.new(10) }
   end
 
+  def randomly_place_ships
+    @ships.each do |ship|
+      ship.randomly_place(self)
+    end
+  end
+
   private
   def hit(pos)
     place_mark(pos, hit_marker)

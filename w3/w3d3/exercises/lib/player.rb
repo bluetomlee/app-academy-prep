@@ -9,16 +9,13 @@ class HumanPlayer
   end
 
   def place_ships
-    if Helper.prompt("Enter R to automatically randomly place your ships, \nor just press enter to place your ships manually.") == "R"
-      @board.ships.each do |ship|
-        start = random_start_pos(ship)
-        ship.place(start, random_end_pos(start, ship))
-      end
+    if Helper.prompt("Enter R to automatically randomly place your ships, \nor just press enter to place your ships manually.").upcase == "R"
+      @board.randomly_place_ships
     else
       @board.ships.each do |ship|
         puts "You are placing your #{ship.name}. It is #{ship.length} boxes long."
         start = start_pos(ship)
-        ship.place(start, end_pos(start, ship))
+        ship.place(start, end_pos(start, ship)) if start
       end
     end
 
@@ -54,7 +51,11 @@ class HumanPlayer
 
     until pos && pos.valid? && ship.available_end_positions(pos).length > 0
       @board.display(false, false)
-      input = Helper.prompt("Enter the start position for where the ship will be placed.")
+      input = Helper.prompt("Enter the start position for where the ship will be placed. Or enter R to have it randomly placed.")
+      if input.upcase == "R"
+        ship.randomly_place(@board)
+        return nil
+      end
       pos = parse_position( input )
 
       unless pos && pos.valid? && pos.empty? && ship.available_end_positions(pos).length > 0
@@ -95,19 +96,5 @@ class HumanPlayer
     end
 
     end_position
-  end
-
-  def random_start_pos(ship)
-    pos = nil
-
-    until pos && pos.valid? && ship.available_end_positions(pos).length > 0
-      pos = Position.random_empty(@board)
-    end
-
-    pos
-  end
-
-  def random_end_pos(start, ship)
-    ship.available_end_positions(start).sample
   end
 end

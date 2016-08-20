@@ -7,10 +7,7 @@ class ComputerPlayer
   end
 
   def place_ships
-    @board.ships.each do |ship|
-      start = start_pos(ship)
-      ship.place(start, end_pos(start, ship))
-    end
+    @board.randomly_place_ships
 
     puts
     puts "#{@name} placed all of their ships."
@@ -58,17 +55,4 @@ class ComputerPlayer
   end
 
   private
-  def start_pos(ship)
-    pos = nil
-
-    until pos && pos.valid? && ship.available_end_positions(pos).length > 0
-      pos = Position.random_empty(@board)
-    end
-
-    pos
-  end
-
-  def end_pos(start, ship)
-    ship.available_end_positions(start).sample
-  end
 end
