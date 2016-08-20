@@ -54,7 +54,7 @@ class ComputerPlayer
       end
     end
 
-    Position.random_empty(board)
+    Position.random_empty(@attacking_board)
   end
 
   private
