@@ -30,7 +30,7 @@ class ComputerPlayer < Abstract
 
   def update_candidate_words
     @candidate_words.delete_if do |word|
-      word = word.upcase
+      word = word.upcase.chomp
       delete = false
       delete = true if word.length != @board.word_length
 
@@ -52,11 +52,19 @@ class ComputerPlayer < Abstract
 
     @candidate_words.each do |word|
       word.upcase.chars.each do |letter|
-        letters[letter] = letters[letter].to_i + 1 if @board.not_guessed?(letter)
+        if letter.match(/^[A-Z]$/) && @board.not_guessed?(letter)
+          letters[letter] = letters[letter].to_i + 1
+        end
       end
     end
 
-    letters.max_by{|k,v| v}[0]
+    most_common = letters.max_by{|k,v| v}
+
+    if most_common
+      most_common[0]
+    else
+      nil
+    end
   end
 
   def check_guess(letter)
@@ -76,7 +84,9 @@ class ComputerPlayer < Abstract
 
   def guess
     update_candidate_words
-    most_common_letter
+    letter = most_common_letter
+
+    letter
   end
 
   private

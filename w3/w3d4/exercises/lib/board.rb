@@ -14,7 +14,7 @@ class Board < Abstract
 
   def fill_in_letter(letter, indexes=[])
     letter = letter.upcase
-    
+
     if indexes.length > 0
       indexes.each {|index| @word[index] = letter}
     else
@@ -37,12 +37,24 @@ class Board < Abstract
     @word.length
   end
 
+  def blank_spaces
+    @word.count {|e| e.nil?}
+  end
+
   def solved?
     @word.all? {|l| !l.nil?}
   end
 
   def lost?
     @missed_letters.length >= @maximum_misses
+  end
+
+  def index_of_blank_spot(num)
+    count = 0
+    @word.each_with_index do |letter, index|
+      count += 1 if letter.nil?
+      return index if count == num
+    end
   end
 
   def not_guessed?(letter)
@@ -61,8 +73,23 @@ class Board < Abstract
     @missed_letters.length > num
   end
 
-  def display_word
+  def display_word(with_numbers = false)
     puts "               #{@word.inject("") {|final_word, letter| final_word += letter ? letter : "_"}.chars.join(' ')}"
+    if with_numbers
+      count = 1
+      numbers = @word.inject("") do |final, letter|
+        if letter
+          final += " "
+        else
+          final += count.to_s
+          count += 1
+        end
+
+        final
+      end
+
+      puts "               #{numbers.chars.join(' ')}"
+    end
   end
 
   def display_misses
