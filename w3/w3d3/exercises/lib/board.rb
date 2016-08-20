@@ -17,12 +17,12 @@ class Board
 
   def print_possible_positions(start_position, end_positions, attacker=true)
     place_mark(start_position.coordinates, 'N')
-    end_positions.each do |position|
-      place_mark(position.coordinates, 'E')
+    end_positions.each_with_index do |position,index|
+      place_mark(position.coordinates, index + 1)
     end
 
     puts "N marks the start point for the ship you are currently placing."
-    puts "E marks the possible endpoints."
+    puts "The possible endpoints are noted by numbers."
     display(attacker, false)
     unmark(start_position.coordinates)
     end_positions.each {|position| unmark(position.coordinates)}

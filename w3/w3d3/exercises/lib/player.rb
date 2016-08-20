@@ -83,13 +83,15 @@ class HumanPlayer
   def end_pos(start, ship)
     end_position = nil
 
-    until end_position && ship.available_end_positions(start).any? {|pos| pos == end_position}
-      @board.print_possible_positions(start, ship.available_end_positions(start), false)
+    available_positions = ship.available_end_positions(start)
 
-      input = Helper.prompt("Enter the end position for where the ship will be placed.")
-      end_position = parse_position( input )
+    until end_position && available_positions.any? {|pos| pos == end_position}
+      @board.print_possible_positions(start, available_positions, false)
 
-      unless end_position && ship.available_end_positions(start).any? {|pos| pos == end_position}
+      input = Helper.prompt("Enter the number of the end position for where the ship will be placed.")
+      end_position = available_positions[ input.to_i - 1 ] if input.match(/^[1-4]$/)
+
+      unless end_position && available_positions.any? {|pos| pos == end_position}
         end_position = nil
         puts "You entered an invalid option. Please try again."
       end
