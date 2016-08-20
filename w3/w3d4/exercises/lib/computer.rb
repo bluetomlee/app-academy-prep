@@ -1,5 +1,5 @@
 class ComputerPlayer < Abstract
-  attr_accessor :name, :word, :board, :dictionary, :candidate_words
+  attr_accessor :name, :word, :board, :dictionary, :candidate_words, :wins
 
   def initialize(options={})
     default_options = {
@@ -10,8 +10,17 @@ class ComputerPlayer < Abstract
     options = default_options.merge(options)
 
     @dictionary = options[:dictionary]
-    @candidate_words = options[:dictionary]
     @name = options[:name]
+    @candidate_words = options[:dictionary]
+    @wins = 0
+  end
+
+  def reset_candidate_words
+    @candidate_words = @dictionary
+  end
+
+  def new_game
+    reset_candidate_words
   end
 
   def pick_secret_word
@@ -67,6 +76,10 @@ class ComputerPlayer < Abstract
     end
   end
 
+  def increment_wins
+    @wins += 1
+  end
+
   def check_guess(letter)
     indexes = []
 
@@ -82,9 +95,23 @@ class ComputerPlayer < Abstract
   def handle_response
   end
 
+  def random_guess
+    letter = nil
+
+    until letter
+      letter = ("A".."Z").to_a.sample
+
+      letter = nil if !@board.not_guessed?(letter)
+    end
+
+    letter
+  end
+
   def guess
     update_candidate_words
     letter = most_common_letter
+
+    letter = random_guess if !letter || !letter.match(/^[A-Za-z]$/)
 
     letter
   end

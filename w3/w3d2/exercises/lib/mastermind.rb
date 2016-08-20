@@ -178,3 +178,9 @@ class Array
     self.count { |e| e == value }
   end
 end
+
+if __FILE__ == $PROGRAM_NAME
+  game = Game.new
+
+  game.play
+end

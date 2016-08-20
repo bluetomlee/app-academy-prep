@@ -1,5 +1,5 @@
 class HumanPlayer < Abstract
-  attr_accessor :name, :board
+  attr_accessor :name, :board, :wins
 
   def initialize(options={})
     default_options = {
@@ -9,6 +9,7 @@ class HumanPlayer < Abstract
     options = default_options.merge(options)
 
     @name = options[:name]
+    @wins = 0
   end
 
   def pick_secret_word
@@ -22,6 +23,9 @@ class HumanPlayer < Abstract
     end
 
     length.to_i
+  end
+
+  def new_game
   end
 
   def check_guess(letter)
@@ -58,6 +62,10 @@ class HumanPlayer < Abstract
   end
 
   def handle_response
+  end
+
+  def increment_wins
+    @wins += 1
   end
 
   def set_board(board)
