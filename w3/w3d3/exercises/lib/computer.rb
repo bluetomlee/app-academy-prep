@@ -1,5 +1,5 @@
 class ComputerPlayer
-  attr_accessor :name, :board
+  attr_accessor :name, :board, :attacking_board
 
   def initialize(name)
     @name = name
@@ -18,27 +18,27 @@ class ComputerPlayer
     puts
   end
 
-  def take_turn(board)
-    if board.currently_attacking
-      pos = fire_on_ship(board)
+  def take_turn
+    if @attacking_board.currently_attacking
+      pos = fire_on_ship
     else
-      pos = Position.random_empty(board)
+      pos = Position.random_empty(@attacking_board)
     end
 
-    board.attack(pos)
-    board.display
+    @attacking_board.attack(pos)
+    @attacking_board.display
 
     puts "#{@name} has finished their turn."
     Helper.press_enter
   end
 
-  def fire_on_ship(board)
-    hits = board.currently_attacking.hits
+  def fire_on_ship
+    hits = @attacking_board.currently_attacking.hits
 
     if hits.length == 1
       last_hit = hits[0]
-      pos = Position.new(last_hit[0], last_hit[1])
-      return pos.surrounding_positions(board).sample
+      pos = Position.new(last_hit[0], last_hit[1], @attacking_board)
+      return pos.surrounding_positions.sample
     else
       options = {}
 
@@ -49,8 +49,8 @@ class ComputerPlayer
       end
 
       hits.each do |hit|
-        pos = Position.new(hit[0], hit[1])
-        return pos.surrounding_positions(board, options).sample if pos.surrounding_positions(board, options).length > 0
+        pos = Position.new(hit[0], hit[1], @attacking_board)
+        return pos.surrounding_positions(options).sample if pos.surrounding_positions(options).length > 0
       end
     end
 
@@ -61,7 +61,7 @@ class ComputerPlayer
   def start_pos(ship)
     pos = nil
 
-    until pos && pos.valid?(@board) && ship.available_end_positions(pos, @board).length > 0
+    until pos && pos.valid? && ship.available_end_positions(pos).length > 0
       pos = Position.random_empty(@board)
     end
 
@@ -69,6 +69,6 @@ class ComputerPlayer
   end
 
   def end_pos(start, ship)
-    ship.available_end_positions(start, @board).sample
+    ship.available_end_positions(start).sample
   end
 end

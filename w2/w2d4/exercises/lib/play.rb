@@ -34,5 +34,6 @@ def set_up_player(num)
   player
 end
 
-game = Game.new(set_up_player("one"), set_up_player("two"))
+p1.attacking_board, p2.attacking_board = p2.board, p1.board
+game = Game.new(p1, p2)
 game.play

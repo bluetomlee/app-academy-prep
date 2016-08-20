@@ -96,7 +96,7 @@ class Board
 
     @grid.each_with_index do |row, index|
       row.each_with_index do |spot, index2|
-        positions << Position.new(index, index2) if spot.nil? && !has_ship?([index, index2])
+        positions << Position.new(index, index2, self) if spot.nil?
       end
     end
 

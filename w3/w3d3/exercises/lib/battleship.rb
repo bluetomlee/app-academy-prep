@@ -34,7 +34,7 @@ class BattleshipGame
   end
 
   def take_turn
-    current_player.take_turn(other_player.board)
+    current_player.take_turn
     swap_players
   end
 
@@ -93,5 +93,7 @@ class BattleshipGame
 
       player.place_ships
     end
+
+    @players[0].attacking_board, @players[1].attacking_board = @players[1].board, @players[0].board
   end
 end

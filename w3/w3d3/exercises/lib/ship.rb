@@ -30,31 +30,16 @@ class Ship
     !!@start_pos && !!@end_pos
   end
 
-  def available_end_positions(start_pos, board)
-    positions = []
-
-    possible_positions(start_pos).each do |position|
-      positions << position if position.valid?(board) && !position_blocked?(board, start_pos, position)
-    end
-
-    positions
-  end
-
-  def possible_positions(start_pos)
-    [
-      Position.new(start_pos.col, start_pos.row - (@length - 1)),
-      Position.new(start_pos.col, start_pos.row + (@length - 1)),
-      Position.new(start_pos.col - (@length - 1), start_pos.row),
-      Position.new(start_pos.col + (@length - 1), start_pos.row)
-    ]
+  def available_end_positions(start_pos)
+    start_pos.surrounding_positions(path_clear: true, blocks_away: @length - 1)
   end
 
   def x_range
-    range(@start_pos[0], @end_pos[0])
+    Helper.range(@start_pos[0], @end_pos[0])
   end
 
   def y_range
-    range(@start_pos[1], @end_pos[1])
+    Helper.range(@start_pos[1], @end_pos[1])
   end
 
   private
@@ -66,31 +51,11 @@ class Ship
     @start_pos && @end_pos && @start_pos[0] == @end_pos[0]
   end
 
-  def range(start, stop)
-    small = [start, stop].min
-    large = [start, stop].max
-    (small..large)
-  end
-
   def correct_length?
     if horizontal?
       x_range.count == @length
     else
       y_range.count == @length
-    end
-  end
-
-  def position_blocked?(board, start_pos, end_pos)
-    if start_pos.col == end_pos.col
-      range(start_pos.row, end_pos.row).any? do |num|
-        pos = [num, start_pos.col]
-        !board.empty?(pos) || board.has_ship?(pos)
-      end
-    else
-      range(start_pos.col, end_pos.col).any? do |num|
-        pos = [start_pos.row, num]
-        !board.empty?(pos) || board.has_ship?(pos)
-      end
     end
   end
 end
