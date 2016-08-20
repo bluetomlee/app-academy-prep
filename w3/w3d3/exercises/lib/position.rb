@@ -58,19 +58,34 @@ class Position
 
     positions = []
 
-    p1 = Position.new(col, row + options[:blocks_away], @board)
-    p2 = Position.new(col, row - options[:blocks_away], @board)
-    p3 = Position.new(col + options[:blocks_away], row, @board)
-    p4 = Position.new(col - options[:blocks_away], row, @board)
+    positions += surrounding_x_positions(options[:blocks_away]) unless options[:y_only]
+    positions += surrounding_y_positions(options[:blocks_away]) unless options[:x_only]
 
-    positions << p1 unless options[:y_only] || !p1.empty? || !p1.valid?
-    positions << p2 unless options[:y_only] || !p2.empty? || !p2.valid?
-    positions << p3 unless options[:x_only] || !p3.empty? || !p3.valid?
-    positions << p4 unless options[:x_only] || !p4.empty? || !p4.valid?
+    positions.delete_if {|position| path_blocked?(position)} if options[:path_clear]
 
-    if( options[:path_clear])
-      positions.delete_if {|position| path_blocked?(position)}
-    end
+    positions
+  end
+
+  def surrounding_x_positions(blocks_away)
+    positions = []
+
+    p1 = Position.new(col, row + blocks_away, @board)
+    p2 = Position.new(col, row - blocks_away, @board)
+
+    positions << p1 unless !p1.empty? || !p1.valid?
+    positions << p2 unless !p2.empty? || !p2.valid?
+
+    positions
+  end
+
+  def surrounding_y_positions(blocks_away)
+    positions = []
+
+    p1 = Position.new(col + blocks_away, row, @board)
+    p2 = Position.new(col - blocks_away, row, @board)
+
+    positions << p1 unless !p1.empty? || !p1.valid?
+    positions << p2 unless !p2.empty? || !p2.valid?
 
     positions
   end
