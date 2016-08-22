@@ -6,7 +6,7 @@ require_relative 'computer'
 require_relative 'ship'
 
 class BattleshipGame
-  attr_reader :players
+  attr_reader :players, :turn
 
   def initialize(player_one, player_two)
     @players = [player_one, player_two]
@@ -17,7 +17,7 @@ class BattleshipGame
     BattleshipGame.instructions
     setup_boards
 
-    until @players.any? {|player| player.board.won?}
+    until game_over?
       take_turn
     end
 
@@ -31,6 +31,10 @@ class BattleshipGame
     loser.board.display(false)
 
     Helper.prompt("Press Enter to exit game.")
+  end
+
+  def game_over?
+    @players.any? {|player| player.board.won?}
   end
 
   def take_turn
@@ -66,6 +70,14 @@ class BattleshipGame
     Helper.press_enter
   end
 
+  def swap_players
+    @turn = not_turn
+  end
+
+  def set_attacking_boards
+    @players[0].attacking_board, @players[1].attacking_board = @players[1].board, @players[0].board
+  end
+
   private
   def both_players_human?
     @players.all? {|player| player.instance_of?(HumanPlayer)}
@@ -73,10 +85,6 @@ class BattleshipGame
 
   def not_turn
     ( @turn + 1 ) % 2
-  end
-
-  def swap_players
-    @turn = not_turn
   end
 
   def setup_boards
@@ -94,7 +102,7 @@ class BattleshipGame
       player.place_ships
     end
 
-    @players[0].attacking_board, @players[1].attacking_board = @players[1].board, @players[0].board
+    set_attacking_boards
   end
 end
 

@@ -61,8 +61,12 @@ class Board
     false
   end
 
-  def empty?(pos)
-    self[*pos].nil?
+  def empty?(pos = nil)
+    if pos
+      self[*pos].nil?
+    else
+      count == 0
+    end
   end
 
   def place_mark(pos, mark)
@@ -85,10 +89,24 @@ class Board
     @grid[0].length
   end
 
+  def all_ships_placed?
+    ships.all? {|ship| ship.placed?}
+  end
+
   def valid_position?(pos)
     width = @grid[0].length - 1
     height = @grid.length - 1
     (0..width).include?(pos[0]) && (0..height).include?(pos[1])
+  end
+
+  def full?
+    @grid.each_with_index do |row, index|
+      row.each_with_index do |spot, index2|
+        return false if spot.nil? || has_ship?([index, index2])
+      end
+    end
+
+    true
   end
 
   def empty_positions

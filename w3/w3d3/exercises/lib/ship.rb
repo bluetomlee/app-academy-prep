@@ -23,6 +23,8 @@ class Ship
   end
 
   def randomly_place(board)
+    raise "Board is full" if board.full?
+    
     start = random_start_pos(board)
     place(start, random_end_pos(start))
   end

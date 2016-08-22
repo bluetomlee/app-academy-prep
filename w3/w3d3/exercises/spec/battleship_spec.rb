@@ -2,73 +2,49 @@ require "rspec"
 require "battleship"
 require "board"
 require "player"
-# need to rewrite tests to test for bonus stuff
-describe BattleshipGame do
-  let(:player_one) {ComputerPlayer.new("Johnny")}
-  let(:player_two) {ComputerPlayer.new("Jeffy")}
 
-  let(:game) { BattleshipGame.new(player_one, player_two)}
+describe BattleshipGame do
+  let(:player_one) { ComputerPlayer.new("johnny") }
+  let(:player_two) { ComputerPlayer.new("alfred") }
+
+  let(:game) { BattleshipGame.new(player_one, player_two) }
 
   describe "#initialize" do
-    it "accepts two players as the arguments" do
+    it "accepts a player one and player two as arguments" do
       expect { game }.not_to raise_error
     end
   end
 
-  describe "take_turn" do
-    it "let's the first player make their move" do
-      game.take_turn
+  describe "#attack" do
+    it "marks the board at the specified position" do
+      game.players[0].board.attack(Position.new(1, 1, game.players[0].board))
+      expect(game.players[0].board[1, 1]).to eq("-")
+    end
+  end
 
-      expect { game.other_player.board.grid.any? {|row| row.any? {|spot| !spot.nil?}}}.to eq(true)
+  describe "#swap_players" do
+    it "changes the current player" do
+      game.swap_players
+      expect(game.turn).to eq(1)
+    end
+  end
+
+  describe "#game_over?" do
+    it "delegates to the board's #won? method" do
+      expect(game.players[0].board).to receive(:won?)
+
+      game.game_over?
+    end
+  end
+
+  describe "#play_turn" do
+    it "gets a move from the player and makes an attack at that position" do
+      game.set_attacking_boards
+
+      expect(game.players[1].board).to receive(:attack)
+      expect(game.players[1].board).to receive(:display)
+
+      game.players[0].take_turn
     end
   end
 end
-# describe BattleshipGame do
-#   let(:two_ship_grid) { [[:s, :s], [nil, nil]] }
-#   let(:two_ship_board) { Board.new(two_ship_grid) }
-#
-#   let(:player) { double("player") }
-#
-#   let(:game) { BattleshipGame.new(player, two_ship_board) }
-#
-#   describe "#initialize" do
-#     it "accepts a player and a board as arguments" do
-#       expect { game }.not_to raise_error
-#     end
-#   end
-#
-#   describe "#attack" do
-#     it "marks the board at the specified position" do
-#       game.attack([1, 1])
-#
-#       expect(game.board[[1, 1]]).to eq(:x)
-#     end
-#   end
-#
-#   describe "#count" do
-#     it "delegates to the board's #count method" do
-#       expect(game.board).to receive(:count)
-#
-#       game.count
-#     end
-#   end
-#
-#   describe "#game_over?" do
-#     it "delegates to the board's #won? method" do
-#       expect(game.board).to receive(:won?)
-#
-#       game.game_over?
-#     end
-#   end
-#
-#   describe "#play_turn" do
-#     it "gets a move from the player and makes an attack at that position" do
-#       allow(player).to receive(:get_play).and_return([1, 1])
-#
-#       expect(player).to receive(:get_play)
-#       expect(game).to receive(:attack).with([1, 1])
-#
-#       game.play_turn
-#     end
-#   end
-# end
